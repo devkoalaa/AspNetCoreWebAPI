@@ -35,6 +35,20 @@ namespace SmartSchool.API.Controllers
                 Nome = "Isadora",
                 Sobrenome = "Pinto",
                 Telefone = "(61) 9 9999-9999"
+            },
+            new Aluno()
+            {
+                Id = 4,
+                Nome = "Isadora",
+                Sobrenome = "Machado",
+                Telefone = "(61) 9 9999-9999"
+            },
+            new Aluno()
+            {
+                Id = 2,
+                Nome = "Roberto",
+                Sobrenome = "Pinto",
+                Telefone = "(61) 9 9999-9999"
             }
         };
 
@@ -56,13 +70,42 @@ namespace SmartSchool.API.Controllers
             return Ok(aluno);
         }
 
-        // GET alunos/Laura
-        [HttpGet("{nome}")]
-        public IActionResult GetByName(string nome)
+        // GET alunos/GetByNome/Laura
+        [HttpGet("GetByNome/{nome}")]
+        public IActionResult GetByNome(string nome)
         {
-            var aluno = Alunos.FirstOrDefault(w => w.Nome.Contains(nome));
+            var aluno = Alunos
+                .Where(w => w.Nome.Contains(nome))
+                .Select(s => new
+                {
+                    Id = s.Id,
+                    Nome = s.Nome,
+                    Sobrenome = s.Sobrenome,
+                    Telefone = s.Telefone
+                })
+                .ToList();
 
             if (aluno == null) return BadRequest("Nenhum aluno encontrado com esse nome");
+
+            return Ok(aluno);
+        }
+
+        // GET alunos/GetBySobrenome/Oliveira
+        [HttpGet("GetBySobrenome/{sobrenome}")]
+        public IActionResult GetBySobrenome(string sobrenome)
+        {
+            var aluno = Alunos
+                .Where(w => w.Sobrenome == sobrenome)
+                .Select(s => new
+                {
+                    Id = s.Id,
+                    Nome = s.Nome,
+                    Sobrenome = s.Sobrenome,
+                    Telefone = s.Telefone
+                })
+                .ToList();
+
+            if (aluno == null) return BadRequest("Nenhum aluno encontrado com esse sobrenome");
 
             return Ok(aluno);
         }
